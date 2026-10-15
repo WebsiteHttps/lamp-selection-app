@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="UVC Lamp Selection System — Calculate optimal lamp configurations for coil coverage.">
+  <title>UVC Lamp Selection System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💡</text></svg>">
+</head>
+<body>
+  <!-- ===================== LOGIN SCREEN ===================== -->
+  <div id="login-screen" class="screen active">
+    <div class="login-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="login-card glass-card" role="form" aria-label="Sign in">
+      <div class="login-logo">
+        <div class="logo-icon">
+          <img src="/logo.jpg" alt="Universal Solutions Logo">
+        </div>
+        <h1 class="login-title">Commercial UVC<br>Lamp Selection Software</h1>
+        <p class="login-subtitle">Sign in to access the software</p>
+      </div>
+      <form id="login-form" autocomplete="on">
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+            <input type="email" id="login-email" name="email" placeholder="you@company.com" required autocomplete="email">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+            <input type="password" id="login-password" name="password" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+        </div>
+        <div id="login-error" class="error-message" role="alert"></div>
+        <button type="submit" id="login-btn" class="btn btn-primary btn-full">
+          <span class="btn-text">Sign In</span>
+          <span class="btn-loader" aria-hidden="true"></span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== MAIN APP SCREEN ===================== -->
+  <div id="app-screen" class="screen">
+    <!-- Top Bar -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="header-logo-mini">
+          <img src="/logo.jpg" alt="Logo">
+        </div>
+      </div>
+      <h1 class="header-title">Commercial UVC Lamp Selection Software</h1>
+      <div class="header-right">
+        <span id="user-greeting" class="user-greeting"></span>
+        <button id="mgmt-btn" class="btn btn-ghost btn-sm hidden" aria-label="Manage users">
+          <svg viewBox="0 0 20 20" fill="currentColor" class="btn-icon"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/></svg>
+          <span>Users</span>
+        </button>
+        <button id="logout-btn" class="btn btn-ghost btn-sm" aria-label="Sign out">
+          <svg viewBox="0 0 20 20" fill="currentColor" class="btn-icon"><path fill-rule="evenodd" d="M3 3a1 1 0 0 0-1 1v12a1 1 0 1 0 2 0V4a1 1 0 0 0-1-1zm10.293 9.293a1 1 0 0 0 1.414 1.414l3-3a1 1 0 0 0 0-1.414l-3-3a1 1 0 1 0-1.414 1.414L14.586 9H7a1 1 0 1 0 0 2h7.586l-1.293 1.293z" clip-rule="evenodd"/></svg>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <div class="app-bg">
+        <div class="orb orb-4"></div>
+        <div class="orb orb-5"></div>
+      </div>
+      
+      <div class="calculator-container">
+        <!-- CALCULATOR VIEW -->
+        <div id="calc-view" class="tab-view">
+          <!-- Input Section -->
+          <section class="input-section glass-card" aria-label="Input Parameters">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Coil Dimensions</h2>
+              <p class="section-desc">Enter the coil size in inches</p>
+            </div>
+          </div>
+          <form id="calc-form" class="calc-form">
+            <div class="input-row">
+              <div class="form-group">
+                <label for="coil-width">Coil Width <span class="unit">(inches)</span></label>
+                <input type="number" id="coil-width" name="coilWidth" min="14" step="any" placeholder="e.g. 50" required>
+                <span class="input-hint">Minimum 14 inches</span>
+              </div>
+              <div class="form-group">
+                <label for="coil-height">Coil Height <span class="unit">(inches)</span></label>
+                <input type="number" id="coil-height" name="coilHeight" min="0.01" step="any" placeholder="e.g. 100" required>
+                <span class="input-hint">Must be greater than 0</span>
+              </div>
+            </div>
+            <button type="submit" id="calc-btn" class="btn btn-primary btn-calc">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><path d="M9 7h6M9 11h6M9 15h4M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
+              <span class="btn-text">Calculate Lamp Selections</span>
+              <span class="btn-loader" aria-hidden="true"></span>
+            </button>
+          </form>
+          </section>
+
+          <!-- Results Section -->
+          <div id="results-section" class="results-section hidden">
+            <div class="results-grid">
+              <!-- Option 1 -->
+              <section class="result-card glass-card option-1" aria-label="Coverage Option 1">
+                <div class="result-header">
+                  <div class="option-badge badge-primary">
+                    Recommended
+                  </div>
+                  <h3>Coverage Option #1</h3>
+                </div>
+                <div class="result-body">
+                  <div class="result-item">
+                    <span class="result-label">Lamp Length</span>
+                    <span class="result-value" id="opt1-length">—</span>
+                    <span class="result-unit">inches</span>
+                  </div>
+                  <div class="result-item">
+                    <span class="result-label">Lamps per Row</span>
+                    <span class="result-value" id="opt1-lamps-per-row">—</span>
+                  </div>
+                  <div class="result-item">
+                    <span class="result-label">Number of Rows</span>
+                    <span class="result-value" id="opt1-rows">—</span>
+                  </div>
+                  <div class="result-item result-total">
+                    <span class="result-label">Total Lamps</span>
+                    <span class="result-value result-value-lg" id="opt1-total">—</span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Option 2 -->
+              <section class="result-card glass-card option-2" aria-label="Coverage Option 2">
+                <div class="result-header">
+                  <div class="option-badge badge-secondary">
+                    Alternative
+                  </div>
+                  <h3>Coverage Option #2</h3>
+                </div>
+                <div class="result-body">
+                  <div class="result-item">
+                    <span class="result-label">Lamp Length</span>
+                    <span class="result-value" id="opt2-length">—</span>
+                    <span class="result-unit">inches</span>
+                  </div>
+                  <div class="result-item">
+                    <span class="result-label">Lamps per Row</span>
+                    <span class="result-value" id="opt2-lamps-per-row">—</span>
+                  </div>
+                  <div class="result-item">
+                    <span class="result-label">Number of Rows</span>
+                    <span class="result-value" id="opt2-rows">—</span>
+                  </div>
+                  <div class="result-item result-total">
+                    <span class="result-label">Total Lamps</span>
+                    <span class="result-value result-value-lg" id="opt2-total">—</span>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <!-- USER MANAGEMENT VIEW (Admin Only) -->
+        <div id="mgmt-view" class="tab-view hidden">
+          <section class="mgmt-section glass-card" aria-label="User Management">
+            <div class="section-header">
+              <div class="section-icon mgmt-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+              </div>
+              <div>
+                <h2 class="section-title">User Management</h2>
+                <p class="section-desc">Add, edit, or remove authorized users</p>
+              </div>
+              <button id="back-to-calc-btn" class="btn btn-ghost btn-sm" style="margin-left: auto;">
+                <svg viewBox="0 0 20 20" fill="currentColor" class="btn-icon"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
+                <span>Calculator</span>
+              </button>
+            </div>
+
+            <div class="mgmt-grid">
+              <!-- Management Panels -->
+              <div class="mgmt-panels">
+                <!-- Add User Panel -->
+                <div id="add-user-panel" class="mgmt-panel">
+                  <h3 class="panel-title">Add New User</h3>
+                  <form id="add-user-form" class="mgmt-form">
+                    <div class="form-group">
+                      <label for="new-user-email">Email Address</label>
+                      <input type="email" id="new-user-email" placeholder="colleague@company.com" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="new-user-password">Password</label>
+                      <input type="password" id="new-user-password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="new-user-confirm">Confirm Password</label>
+                      <input type="password" id="new-user-confirm" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="new-user-role">Role</label>
+                      <select id="new-user-role" class="mgmt-select">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+                    <button type="submit" id="add-user-btn" class="btn btn-primary btn-full">
+                      <span class="btn-text">Create User</span>
+                      <span class="btn-loader"></span>
+                    </button>
+                  </form>
+                </div>
+
+                <!-- Edit User Panel (Hidden by default) -->
+                <div id="edit-user-panel" class="mgmt-panel hidden">
+                  <h3 class="panel-title">Edit User: <span id="editing-email-display"></span></h3>
+                  <form id="edit-user-form" class="mgmt-form">
+                    <input type="hidden" id="edit-user-email">
+                    <div class="form-group">
+                      <label for="edit-user-password">New Password <span class="unit">(Leave blank to keep current)</span></label>
+                      <input type="password" id="edit-user-password" placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                      <label for="edit-user-confirm">Confirm New Password</label>
+                      <input type="password" id="edit-user-confirm" placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                      <label for="edit-user-role">Role</label>
+                      <select id="edit-user-role" class="mgmt-select">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+                    <div class="btn-group-row">
+                      <button type="button" id="cancel-edit-btn" class="btn btn-ghost">Cancel</button>
+                      <button type="submit" id="update-user-btn" class="btn btn-primary btn-grow">Update User</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <!-- User List Panel -->
+              <div class="user-list-panel">
+                <h3 class="panel-title">Active Users</h3>
+                <div id="user-list-container" class="user-list">
+                  <div class="loading-spinner">Loading users...</div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <footer class="app-disclaimer">
+        <p>Copyright &copy; 2026 Universal UV Solutions - All Rights Reserved</p>
+        <p>This software is provided for evaluation purposes only. All calculations are valid only for Universal UV Solutions Commercial T6 High-Output lamp systems.<br>
+        Dissemination, distribution and or reproduction of this software is strictly forbidden unless prior written permission is obtained from Universal UV Solutions.<br>
+        All information contained here is confidential and remain the sole property of Universal UV Solutions.<br> The intellectual and technical concepts contained here are proprietary, copyrighted by Universal UV Solutions and may contain trade secrets covered under US and Foreign Patents.<br>
+        This software is licensed "as-is", and Universal UV Solutions makes no express or implied warranty of any kind.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
